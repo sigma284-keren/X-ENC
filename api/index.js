@@ -4,15 +4,15 @@ export default async function handler(req, res) {
     }
 
     try {
-        const form = new FormData();
-        const file = req.body.file;
-        const method = req.body.method;
+        const formData = await req.formData();
+        const file = formData.get('file');
+        const method = formData.get('method') || 'unescape';
 
         if (!file) {
             return res.status(400).json({ error: 'No file provided' });
         }
 
-        const content = file.toString();
+        const content = await file.text();
 
         let encoded;
         switch (method) {
@@ -95,7 +95,7 @@ function encodeUnescape(html) {
 }
 
 function encodeBase64(html) {
-    let encoded = Buffer.from(html).toString('base64');
+    let encoded = Buffer.from(html, 'utf-8').toString('base64');
     return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\nconst _0x = "${encoded}";\ndocument.write(atob(_0x));\n<\/script>`;
 }
 
@@ -109,7 +109,7 @@ function encodeHex(html) {
 }
 
 function encodeMixed(html) {
-    let b64 = Buffer.from(html).toString('base64');
+    let b64 = Buffer.from(html, 'utf-8').toString('base64');
     let hexed = [];
     for (let char of b64) {
         let code = char.charCodeAt(0);

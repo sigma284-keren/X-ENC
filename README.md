@@ -9,10 +9,10 @@
 </p>
 
 ## 📌 Tentang
-**X-ENC** adalah sebuah web tool sederhana namun *powerful* untuk melakukan *obfuscate* atau enkripsi pada file HTML. Dirancang dengan antarmuka elegan. Semua proses enkripsi berjalan 100% di *client-side* (di dalam browser), sehingga kode sumber kamu dijamin aman dan tidak ada data yang dikirim ke server.
+**X-ENC** adalah sebuah web tool sederhana namun *powerful* untuk melakukan *obfuscate* atau enkripsi pada file HTML. Dirancang dengan antarmuka elegan. Pada versi ini, pemrosesan enkripsi telah terintegrasi dengan **API Backend**, memastikan performa pemrosesan yang lebih handal.
 
 ## ✨ Fitur Utama
-- ⚡ **Client-Side Processing:** Pemrosesan cepat dan aman langsung dari browser, tanpa perlu backend.
+- ⚡ **API Processing:** Pemrosesan obfuscation kini dikelola secara aman melalui endpoint API.
 - 📱 **Responsif:** Tampilan menyesuaikan dengan sempurna baik di desktop maupun mobile.
 - 🛡️ **4 Pilihan Metode Enkripsi:**
   - `unescape`: Mengonversi karakter menjadi format URL encoding (`%XX`).
@@ -21,20 +21,20 @@
   - `mixed`: Kombinasi kompleks antara Base64 dan Hexadecimal untuk tingkat obfuscation yang lebih tinggi dan sulit dibaca.
 
 ## 🚀 Cara Penggunaan
-1. Clone repositori ini atau download file ZIP:
+1. Clone repositori ini:
    ```bash
    git clone https://github.com/sigma284-keren/X-ENC.git
    ```
-2. Buka file `index.html` menggunakan browser pilihanmu (bisa langsung dibuka atau dihosting via Vercel / GitHub Pages).
-3. Klik **Pilih file HTML** dan masukkan file `.html` atau `.htm` target yang ingin kamu enkripsi.
-4. Pilih salah satu **Metode** enkripsi yang tersedia di menu.
-5. Klik tombol **Proses & Download**.
-6. File hasil obfuscate akan otomatis terunduh dengan format nama `<namafile>_<metode>.html`.
+2. Karena versi ini menggunakan Fetch API (`/api`), pastikan untuk **menghosting atau menjalankan project ini di environment server** (misalnya di-deploy ke Vercel menggunakan Serverless Functions, atau dijalankan via server lokal Node.js).
+3. Buka halaman utama web di browser.
+4. Klik **Pilih file HTML** dan masukkan file `.html` atau `.htm` target yang ingin kamu enkripsi.
+5. Pilih salah satu **Metode** enkripsi yang tersedia di menu.
+6. Klik tombol **Proses & Download**.
+7. File hasil obfuscate akan otomatis terunduh dengan format nama `<namafile>_<metode>.html`.
 
 ## 🛠️ Teknologi yang Digunakan
-- **HTML5**
-- **CSS3** (Custom Properties, Backdrop Filter, CSS Animations)
-- **Vanilla JavaScript** (FileReader API, Blob API, Btoa/Atob)
+- **Frontend:** HTML5, CSS3 (Glassmorphism), Vanilla JavaScript (Fetch API, FormData)
+- **Backend:** API Endpoint (`/api`) untuk memproses enkripsi file
 
 ## ⚠️ Disclaimer
 **Gunakan alat ini dengan bijak.** Tool ini dibuat semata-mata untuk tujuan perlindungan source code dasar agar tidak mudah dibaca secara langsung. Jangan menyalahgunakan tool ini untuk menyembunyikan script berbahaya (malware/phishing) atau tujuan lain yang melanggar hukum. 

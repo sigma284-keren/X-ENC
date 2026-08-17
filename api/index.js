@@ -1,6 +1,13 @@
-export default async function handler(req, res) {
+export const config = {
+    runtime: 'edge',
+};
+
+export default async function handler(req) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+            status: 405,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 
     try {
@@ -9,7 +16,10 @@ export default async function handler(req, res) {
         const method = formData.get('method') || 'unescape';
 
         if (!file) {
-            return res.status(400).json({ error: 'No file provided' });
+            return new Response(JSON.stringify({ error: 'No file provided' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
         const content = await file.text();
@@ -32,14 +42,20 @@ export default async function handler(req, res) {
                 encoded = encodeUnescape(content);
         }
 
-        return res.status(200).json({ 
+        return new Response(JSON.stringify({ 
             encoded: encoded,
             method: method,
             size: encoded.length
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return new Response(JSON.stringify({ error: error.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -95,7 +111,7 @@ function encodeUnescape(html) {
 }
 
 function encodeBase64(html) {
-    let encoded = Buffer.from(html, 'utf-8').toString('base64');
+    let encoded = btoa(unescape(encodeURIComponent(html)));
     return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\nconst _0x = "${encoded}";\ndocument.write(atob(_0x));\n<\/script>`;
 }
 
@@ -109,7 +125,7 @@ function encodeHex(html) {
 }
 
 function encodeMixed(html) {
-    let b64 = Buffer.from(html, 'utf-8').toString('base64');
+    let b64 = btoa(unescape(encodeURIComponent(html)));
     let hexed = [];
     for (let char of b64) {
         let code = char.charCodeAt(0);

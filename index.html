@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>X-ENC</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --bg-primary: #09090b;
+            --glass: rgba(24, 24, 27, 0.65);
+            --glass-strong: rgba(39, 39, 42, 0.85);
+            --glass-hover: rgba(39, 39, 42, 0.45);
+            --border-glass: rgba(255, 255, 255, 0.12);
+            --border-glass-soft: rgba(255, 255, 255, 0.06);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #ffffff;
+            --accent-soft: rgba(255, 255, 255, 0.08);
+            --success: #34d399;
+            --success-bg: rgba(52, 211, 153, 0.1);
+            --error: #f87171;
+            --error-bg: rgba(248, 113, 113, 0.1);
+            --shadow-lg: 0 24px 50px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 320px;
+            height: 320px;
+            background: #3f3f46;
+            top: -100px;
+            right: -100px;
+        }
+
+        .orb-2 {
+            width: 260px;
+            height: 260px;
+            background: #27272a;
+            bottom: -90px;
+            left: -80px;
+            animation-delay: -6s;
+        }
+
+        .orb-3 {
+            width: 220px;
+            height: 220px;
+            background: #18181b;
+            top: 55%;
+            left: 55%;
+            animation-delay: -11s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(24px, -24px) scale(1.06); }
+            66% { transform: translate(-18px, 18px) scale(0.94); }
+        }
+
+        .container {
+            background: var(--glass);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-glass);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border-glass-soft);
+            margin: 28px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--border-glass-soft);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-box:hover {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: var(--border-glass);
+        }
+
+        .method-box h3 {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .method-item {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            font-size: 13px;
+            letter-spacing: 0.1px;
+            transition: color 0.3s ease;
+        }
+
+        .method-item:hover {
+            color: var(--text-primary);
+        }
+
+        .method-item strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin: 28px 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px dashed var(--border-glass);
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .method-select {
+            margin: 24px 0 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-select label {
+            margin-bottom: 12px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 16px;
+            border: 1px solid var(--border-glass-soft);
+        }
+
+        .radio-group label {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin: 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: transparent;
+            transition: all 0.25s ease;
+        }
+
+        .radio-group label:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .radio-group label:has(input:checked) {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn:hover {
+            background: #d4d4d8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active { transform: translateY(0) scale(0.98); }
+
+        .btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            margin-top: 24px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-glass-soft);
+            border-left: 3px solid var(--text-tertiary);
+            word-break: break-all;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status.success {
+            display: block;
+            background: var(--success-bg);
+            border-left-color: var(--success);
+            color: var(--success);
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .status.error {
+            display: block;
+            background: var(--error-bg);
+            border-left-color: var(--error);
+            color: var(--error);
+            border-color: rgba(248, 113, 113, 0.2);
+        }
+
+        .status .file-info {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .status .meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            letter-spacing: 0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top-color: var(--bg-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn.loading .spinner { display: inline-block; }
+        .btn.loading .btn-text { display: none; }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+                border-radius: 20px;
+            }
+            .radio-group {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .method-item {
+                font-size: 12px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .method-box {
+                padding: 14px;
+            }
+            .btn {
+                padding: 14px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .container {
+                padding: 18px 12px;
+            }
+            .radio-group label {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <h1>X-ENC</h1>
+        <p class="subtitle">HTML Obfuscation Tool</p>
+        <hr class="divider">
+
+        <div class="method-box">
+            <h3>Metode</h3>
+            <div class="method-item"><strong>1.</strong> unescape  → index_unescape.html</div>
+            <div class="method-item"><strong>2.</strong> base64    → index_base64.html</div>
+            <div class="method-item"><strong>3.</strong> hex       → index_hex.html</div>
+            <div class="method-item"><strong>4.</strong> mixed     → index_mixed.html</div>
+        </div>
+
+        <div class="form-group">
+            <label for="fileInput">Pilih file HTML</label>
+            <input type="file" id="fileInput" accept=".html,.htm">
+        </div>
+
+        <div class="method-select">
+            <label>Pilih metode</label>
+            <div class="radio-group">
+                <label><input type="radio" name="method" value="unescape" checked> unescape</label>
+                <label><input type="radio" name="method" value="base64"> base64</label>
+                <label><input type="radio" name="method" value="hex"> hex</label>
+                <label><input type="radio" name="method" value="mixed"> mixed</label>
+            </div>
+        </div>
+
+        <button class="btn" id="processBtn">
+            <span class="btn-text">Proses & Download</span>
+            <span class="spinner"></span>
+        </button>
+
+        <div class="status" id="status"></div>
+        <div class="footer">X-ENC · v1.0</div>
+    </div>
+
+    <script>
+        (function() {
+            const fileInput = document.getElementById('fileInput');
+            const processBtn = document.getElementById('processBtn');
+            const statusDiv = document.getElementById('status');
+
+            function escapeJsStyle(html) {
+                let result = [];
+                for (let char of html) {
+                    let code = char.charCodeAt(0);
+                    if (code === 32) result.push('%20');
+                    else if (code === 33) result.push('%21');
+                    else if (code === 34) result.push('%22');
+                    else if (code === 35) result.push('%23');
+                    else if (code === 36) result.push('%24');
+                    else if (code === 37) result.push('%25');
+                    else if (code === 38) result.push('%26');
+                    else if (code === 39) result.push('%27');
+                    else if (code === 40) result.push('%28');
+                    else if (code === 41) result.push('%29');
+                    else if (code === 42) result.push('%2A');
+                    else if (code === 43) result.push('%2B');
+                    else if (code === 44) result.push('%2C');
+                    else if (code === 45) result.push('%2D');
+                    else if (code === 46) result.push('%2E');
+                    else if (code === 47) result.push('%2F');
+                    else if (code === 58) result.push('%3A');
+                    else if (code === 59) result.push('%3B');
+                    else if (code === 60) result.push('%3C');
+                    else if (code === 61) result.push('%3D');
+                    else if (code === 62) result.push('%3E');
+                    else if (code === 63) result.push('%3F');
+                    else if (code === 64) result.push('%40');
+                    else if (code === 91) result.push('%5B');
+                    else if (code === 92) result.push('%5C');
+                    else if (code === 93) result.push('%5D');
+                    else if (code === 94) result.push('%5E');
+                    else if (code === 95) result.push('_');
+                    else if (code === 96) result.push('%60');
+                    else if (code === 123) result.push('%7B');
+                    else if (code === 124) result.push('%7C');
+                    else if (code === 125) result.push('%7D');
+                    else if (code === 126) result.push('%7E');
+                    else if (code > 127 || code < 32) {
+                        result.push('%' + code.toString(16).toUpperCase().padStart(2, '0'));
+                    } else {
+                        result.push(char);
+                    }
+                }
+                return result.join('');
+            }
+
+            function encodeUnescape(html) {
+                let encoded = escapeJsStyle(html);
+                return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\ndocument.write(unescape("${encoded}"));\n<\/script>`;
+            }
+
+            function encodeBase64(html) {
+                let encoded = btoa(unescape(encodeURIComponent(html)));
+                return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\nconst _0x = "${encoded}";\ndocument.write(atob(_0x));\n<\/script>`;
+            }
+
+            function encodeHex(html) {
+                let result = [];
+                for (let char of html) {
+                    let code = char.charCodeAt(0);
+                    result.push('\\x' + code.toString(16).padStart(2, '0'));
+                }
+                return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\ndocument.write("${result.join('')}");\n<\/script>`;
+            }
+
+            function encodeMixed(html) {
+                let b64 = btoa(unescape(encodeURIComponent(html)));
+                let hexed = [];
+                for (let char of b64) {
+                    let code = char.charCodeAt(0);
+                    hexed.push('\\x' + code.toString(16).padStart(2, '0'));
+                }
+                return `<!-- By Xemzz -->\n<!-- wa.me/6285754585160 -->\n\n<script>\nconst _0x = "${hexed.join('')}";\nfunction _d(s) {\n    let r = "";\n    for(let i=0; i<s.length; i++) {\n        if(s[i]==='\\\\' && i+3<s.length && s[i+1]==='x') {\n            r += String.fromCharCode(parseInt(s.substr(i+2,2),16));\n            i += 3;\n        } else {\n            r += s[i];\n        }\n    }\n    document.write(atob(r));\n}\n_d(_0x);\n<\/script>`;
+            }
+
+            function getMethodFunction(method) {
+                switch(method) {
+                    case 'unescape': return encodeUnescape;
+                    case 'base64': return encodeBase64;
+                    case 'hex': return encodeHex;
+                    case 'mixed': return encodeMixed;
+                    default: return encodeUnescape;
+                }
+            }
+
+            function getMethodName(method) {
+                switch(method) {
+                    case 'unescape': return 'unescape';
+                    case 'base64': return 'base64';
+                    case 'hex': return 'hex';
+                    case 'mixed': return 'mixed';
+                    default: return 'unescape';
+                }
+            }
+
+            function downloadFile(content, filename) {
+                const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            function showStatus(message, type, meta) {
+                statusDiv.className = 'status ' + type;
+                statusDiv.style.display = 'block';
+                let html = '<div class="file-info">' + message + '</div>';
+                if (meta) {
+                    html += '<div class="meta">' + meta + '</div>';
+                }
+                statusDiv.innerHTML = html;
+            }
+
+            function clearStatus() {
+                statusDiv.className = 'status';
+                statusDiv.style.display = 'none';
+                statusDiv.innerHTML = '';
+            }
+
+            processBtn.addEventListener('click', function() {
+                const file = fileInput.files[0];
+                if (!file) {
+                    showStatus('Pilih file HTML terlebih dahulu.', 'error');
+                    return;
+                }
+
+                if (!file.name.match(/\.(html|htm)$/i)) {
+                    showStatus('File harus berekstensi .html atau .htm', 'error');
+                    return;
+                }
+
+                const method = document.querySelector('input[name="method"]:checked').value;
+                const methodFn = getMethodFunction(method);
+                const methodName = getMethodName(method);
+
+                processBtn.classList.add('loading');
+                processBtn.disabled = true;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const htmlContent = e.target.result;
+                        const encoded = methodFn(htmlContent);
+                        const baseName = file.name.replace(/\.[^.]+$/, '');
+                        const outputFilename = baseName + '_' + methodName + '.html';
+                        downloadFile(encoded, outputFilename);
+                        const size = encoded.length;
+                        const sizeStr = size > 1024 ? (size/1024).toFixed(1) + ' KB' : size + ' chars';
+                        showStatus('Berhasil!', 'success', outputFilename + ' · ' + sizeStr + ' · metode: ' + methodName);
+                    } catch(err) {
+                        showStatus('Gagal memproses: ' + err.message, 'error');
+                    } finally {
+                        processBtn.classList.remove('loading');
+                        processBtn.disabled = false;
+                    }
+                };
+                reader.onerror = function() {
+                    showStatus('Gagal membaca file.', 'error');
+                    processBtn.classList.remove('loading');
+                    processBtn.disabled = false;
+                };
+                reader.readAsText(file, 'UTF-8');
+            });
+
+            fileInput.addEventListener('change', function() {
+                clearStatus();
+            });
+
+            document.querySelectorAll('input[name="method"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    clearStatus();
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
